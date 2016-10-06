@@ -1,0 +1,4 @@
+default
+animals
+farming
+wool

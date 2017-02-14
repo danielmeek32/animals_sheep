@@ -1,6 +1,6 @@
 Sheep for Animals mod
 ==============================
-Copyright (c) 2016 Daniel <https://github.com/daniel-32>
+Copyright (c) 2016 Daniel <https://github.com/danielmeek32>
 
 Modified from the original version for Creatures MOB-Engine (cme)
 Copyright (c) 2015 BlockMen <blockmen2015@gmail.com>
@@ -8,7 +8,7 @@ Copyright (c) 2015 BlockMen <blockmen2015@gmail.com>
 Version: 1.0 Alpha
 
 
-Adds sheep to Minetest (requires Animals mod available from https://github.com/daniel-32/animals).
+Adds sheep to Minetest (requires Animals mod available from https://github.com/danielmeek32/animals).
 
 Sheep spawn on grass blocks.
 Untamed sheep remain for 7 1/2 minutes before despawning.
@@ -44,4 +44,4 @@ Sounds:
 
 Github:
 ~~~~~~~
-https://github.com/daniel-32/animals_sheep
+https://github.com/danielmeek32/animals_sheep

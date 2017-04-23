@@ -1,5 +1,5 @@
 --= Sheep for Animals mod =--
--- Copyright (c) 2016 Daniel <https://github.com/danielmeek32>
+-- Copyright (c) 2017 Daniel <https://github.com/danielmeek32>
 --
 -- Modified from the original version for Creatures MOB-Engine (cme)
 -- Copyright (c) 2015 BlockMen <blockmen2015@gmail.com>
@@ -36,31 +36,22 @@ core.register_craft({
 	}
 })
 
-local function shear(self, drop_count)
-	if self.has_wool == true then
-		self.has_wool = false
-		local pos = self.object:getpos()
-		core.sound_play("animals_shears", {pos = pos, gain = 1, max_hear_distance = 10})
-		self.object:set_properties({textures = {"animals_sheep.png"}})
-		animals.dropItems(pos, {{"wool:white", drop_count}})
-	end
-end
-
 local def = {
 	name = "animals:sheep",
-	stats = {
+	parameters = {
 		hp = 8,
-		lifetime = 450, -- 7,5 Minutes
-		jump_height = 1.0,
+		life_time = 450, -- 7,5 Minutes
 		eat_nodes = {"default:dirt_with_grass"},
 		follow_items = {"farming:wheat"},
 		follow_speed = 1.0,
-		follow_radius = 5,
+		follow_distance = 5,
 		follow_stop_distance = 1.5,
 		tame_items = {"farming:wheat"},
 		breed_items = {"farming:wheat"},
-		breedtime = 300, -- 5 Minutes
-		lovetime = 10, -- 10 Seconds
+		breed_distance = 4,
+		breed_time = 10, -- 10 Seconds
+		breed_cooldown_time = 300, -- 5 Minutes
+		death_duration = 2.52,
 	},
 
 	model = {
@@ -69,51 +60,53 @@ local def = {
 		collisionbox = {-0.4, 0, -0.4, 0.4, 1.25, 0.4},
 		rotation = -90.0,
 		collide_with_objects = true,
-		animations = {
-			idle = {start = 1, stop = 60, speed = 15},
-			walk = {start = 81, stop = 101, speed = 18},
-			walk_long = {start = 81, stop = 101, speed = 18},
-			eat = {start = 107, stop = 170, speed = 12, loop = false},
-			follow = {start = 81, stop = 101, speed = 15},
-			death = {start = 171, stop = 191, speed = 32, loop = false, duration = 2.52},
-		},
+	},
+
+	animations = {
+		idle = {start = 1, stop = 60, speed = 15},
+		walk = {start = 81, stop = 101, speed = 18},
+		walk_long = {start = 81, stop = 101, speed = 18},
+		eat = {start = 107, stop = 170, speed = 12, loop = false},
+		follow = {start = 81, stop = 101, speed = 15},
+		death = {start = 171, stop = 191, speed = 32, loop = false},
 	},
 
 	sounds = {
-		on_damage = {name = "animals_sheep", gain = 1.0, distance = 10},
-		on_death = {name = "animals_sheep", gain = 1.0, distance = 10},
-		swim = {name = "animals_splash", gain = 1.0, distance = 10,},
-		random = {
-			idle = {name = "animals_sheep", gain = 0.6, distance = 10, time_min = 23},
-		},
+		damage = {name = "animals_sheep", gain = 1.0, max_hear_distance = 10},
+		death = {name = "animals_sheep", gain = 1.0, max_hear_distance = 10},
+		swim = {name = "animals_splash", gain = 1.0, max_hear_distance = 10},
+		idle = {name = "animals_sheep", gain = 0.6, max_hear_distance = 10, min_interval = 3, max_interval = 12},
+		shear = {name = "animals_shears", gain = 1, max_hear_distance = 10},
 	},
 
 	modes = {
-		idle = {chance = 0.5, duration = 10, update_yaw = 8},
+		idle = {chance = 0.5, duration = 10, direction_change_interval = 8},
 		walk = {chance = 0.14, duration = 4.5, moving_speed = 1.3},
-		walk_long = {chance = 0.11, duration = 8, moving_speed = 1.3, update_yaw = 5},
+		walk_long = {chance = 0.11, duration = 8, moving_speed = 1.3, direction_change_interval = 5},
 		eat = {chance = 0.25, duration = 4},
 	},
 
 	drops = function(self)
-		local items = {{"animals:flesh"}}
+		local items = {{name = "animals:flesh"}}
 		if self.has_wool then
-			table.insert(items, {"wool:white", {min = 1, max = 2}})
+			table.insert(items, {name = "wool:white", min = 1, max = 2})
 		end
-		animals.dropItems(self.object:getpos(), items)
+		return items
 	end,
 
 	spawning = {
-		abm_nodes = {
-			spawn_on = {"default:dirt_with_grass"},
-		},
-		abm_interval = 55,
-		abm_chance = 7800,
-		max_number = 1,
-		number = {min = 1, max = 3},
-		time_range = {min = 5100, max = 18300},
-		light = {min = 10, max = 15},
-		height_limit = {min = 0, max = 25},
+		nodes = {"default:dirt_with_grass"},
+		interval = 60,
+		chance = 8192,
+		min_time = 6000,
+		max_time = 18000,
+		min_height = 0,
+		max_height = 24,
+		surrounding_distance = 16,
+		max_surrounding_count = 0,
+		min_spawn_count = 1,
+		max_spawn_count = 3,
+		spawn_area = 4,
 	},
 
 	get_staticdata = function(self)
@@ -123,10 +116,16 @@ local def = {
 	end,
 
 	on_activate = function(self, staticdata)
+		local table = minetest.deserialize(staticdata)
+		if table and type(table) == "table" then
+			self.has_wool = table.has_wool
+		end
 		if self.has_wool == nil then
 			self.has_wool = true
-		elseif self.has_wool == false then
-			self.object:set_properties({textures = {"animals_sheep.png"}})
+		end
+
+		if self.has_wool == false then
+			self:get_luaentity():set_properties({textures = {"animals_sheep.png"}})
 		end
 	end,
 
@@ -135,9 +134,12 @@ local def = {
 		if item then
 			local name = item:get_name()
 			 if name == "animals_sheep:shears" and self.has_wool then
-				shear(self, math.random(2, 3))
+				self.has_wool = false
+				self:play_sound("shear")
+				self:get_luaentity():set_properties({textures = {"animals_sheep.png"}})
+				self:drop_items({{name = "wool:white", min = 2, max = 3}})
 				item:add_wear(65535/100)
-				if not core.setting_getbool("creative_mode") then
+				if not minetest.setting_getbool("creative_mode") then
 					clicker:set_wielded_item(item)
 				end
 				return true
@@ -148,8 +150,8 @@ local def = {
 
 	on_eat = function(self)
 		self.has_wool = true
-		self.object:set_properties({textures = {"animals_sheep.png^animals_sheep_white.png"}})
+		self:get_luaentity():set_properties({textures = {"animals_sheep.png^animals_sheep_white.png"}})
 	end
 }
 
-animals.registerMob(def)
+animals.register(def)

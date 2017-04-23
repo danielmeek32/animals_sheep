@@ -1,12 +1,11 @@
 Sheep for Animals mod
-==============================
-Copyright (c) 2016 Daniel <https://github.com/danielmeek32>
+=====================
+Copyright (c) 2017 Daniel <https://github.com/danielmeek32>
 
 Modified from the original version for Creatures MOB-Engine (cme)
 Copyright (c) 2015 BlockMen <blockmen2015@gmail.com>
 
-Version: 1.0 Alpha
-
+Version: 2.0
 
 Adds sheep to Minetest (requires Animals mod available from https://github.com/danielmeek32/animals).
 
@@ -25,23 +24,21 @@ Shears are crafted by using 2 steel ingots and one stick in following shape:
   - 	ingot
 ingot 	stick
 
-
 License: 
-~~~~~~~~
+--------
 Code:
-(c) Copyright 2016 Daniel; modified zlib-License
+(c) Copyright 2017 Daniel; modified zlib-License
 see "LICENSE.txt" for details.
 
-Media(textures and meshes/models):
+Meshes and textures:
 (c) Copyright (2014-2015) BlockMen; CC-BY-SA 3.0
 
 Sounds:
-- animals_sheep.1.ogg, confusion_music(https://freesound.org/people/confusion_music) CC-BY 3.0
-- animals_sheep.2.ogg, confusion_music(https://freesound.org/people/confusion_music) CC-BY 3.0
-- animals_sheep.3.ogg, Yuval(https://freesound.org/people/Yuval) CC-BY 3.0
-- animals_shears.ogg, SmartWentCody(https://freesound.org/people/SmartWentCody) CC-BY 3.0
-
+- animals_sheep.1.ogg, confusion_music (https://freesound.org/people/confusion_music) CC-BY 3.0
+- animals_sheep.2.ogg, confusion_music (https://freesound.org/people/confusion_music) CC-BY 3.0
+- animals_sheep.3.ogg, Yuval (https://freesound.org/people/Yuval) CC-BY 3.0
+- animals_shears.ogg, SmartWentCody (https://freesound.org/people/SmartWentCody) CC-BY 3.0
 
 Github:
-~~~~~~~
+-------
 https://github.com/danielmeek32/animals_sheep
